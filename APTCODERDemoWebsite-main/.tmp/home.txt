@@ -1,0 +1,611 @@
+[/workspaces/default/code/src/pages/HomePage.tsx#e79c]
+1:import { useState } from 'react'
+2:import type { Page } from '../App'
+3:
+4:interface Props {
+5:  navigate: (page: Page) => void
+6:}
+7:
+8:const partners = [
+9:  'IIM Lucknow EIC', 'FITT IIT Delhi', 'Microsoft', 'IIT Ropar',
+10:  'Kotak BizLab', 'DST', 'EXIM Bank', 'IIM Lucknow EIC', 'FITT IIT Delhi',
+11:  'Microsoft', 'IIT Ropar', 'Kotak BizLab', 'DST', 'EXIM Bank',
+12:]
+13:
+14:const projectCards = [
+15:  {
+16:    icon: '🎮', title: 'Games', desc: 'Build platformers, puzzles and arcade games with real logic.',
+17:    tags: ['BLOCK CODE', 'PYTHON'], bg: 'bg-pink-50', tagColors: ['bg-pink-100 text-pink-700', 'bg-blue-100 text-blue-700'],
+18:    img: 'https://images.unsplash.com/photo-1592155931584-901ac15763e3?w=300&h=200&fit=crop&auto=format',
+19:  },
+20:  {
+21:    icon: '🌐', title: 'Websites', desc: 'Design and build interactive web pages and apps.',
+22:    tags: ['HTML', 'CSS', 'JS'], bg: 'bg-blue-50', tagColors: ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 'bg-yellow-100 text-yellow-700'],
+23:    img: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=300&h=200&fit=crop&auto=format',
+24:  },
+25:  {
+26:    icon: '📱', title: 'Apps', desc: 'Create functional applications that solve real problems.',
+27:    tags: ['PYTHON', 'JS'], bg: 'bg-yellow-50', tagColors: ['bg-blue-100 text-blue-700', 'bg-yellow-100 text-yellow-700'],
+28:    img: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=300&h=200&fit=crop&auto=format',
+29:  },
+30:  {
+31:    icon: '🧠', title: 'AI Projects', desc: 'Explore machine learning concepts through hands-on experiments.',
+32:    tags: ['PYTHON', 'AI'], bg: 'bg-purple-50', tagColors: ['bg-blue-100 text-blue-700', 'bg-purple-100 text-purple-700'],
+33:    img: 'https://images.unsplash.com/photo-1555255707-c07966088b7b?w=300&h=200&fit=crop&auto=format',
+34:  },
+35:  {
+36:    icon: '🤖', title: 'Robotics', desc: 'Program physical robots that respond to the real world.',
+37:    tags: ['VERNATICS', 'ESP32'], bg: 'bg-green-50', tagColors: ['bg-green-100 text-green-700', 'bg-teal-100 text-teal-700'],
+38:    img: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=200&fit=crop&auto=format',
+39:  },
+40:  {
+41:    icon: '🎬', title: 'Animations', desc: 'Create interactive visual experiences and stories.',
+42:    tags: ['BLOCK CODE', 'JS'], bg: 'bg-orange-50', tagColors: ['bg-pink-100 text-pink-700', 'bg-yellow-100 text-yellow-700'],
+43:    img: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=200&fit=crop&auto=format',
+44:  },
+45:]
+46:
+47:const offerings = [
+48:  {
+49:    icon: '📊', title: 'CNAT', subtitle: 'Coding National Aptitude Test', color: '#3B82F6', bg: 'bg-blue-50',
+50:    desc: 'A structured assessment to benchmark coding aptitude, identify strengths and gaps, and track progress.',
+51:    features: ['Assess Current Level', 'Measure Progress', 'Get Reports'],
+52:    cta: 'Explore CNAT',
+53:  },
+54:  {
+55:    icon: '</>',title: 'Coding Courses', subtitle: 'Structured Learning for Every Age', color: '#8B5CF6', bg: 'bg-purple-50',
+56:    desc: 'Grade-wise programs designed to build strong foundations and advance skills through real projects.',
+57:    features: ['Spoon Gr1–3', 'Kiddo Gr3–5', 'Buddy Gr6–8', 'Pro Gr9–12'],
+58:    cta: 'Explore Courses',
+59:  },
+60:  {
+61:    icon: '👥', title: 'Kids Coding Community (KCC)', subtitle: 'Learn, Build, Share and Grow', color: '#10B981', bg: 'bg-green-50',
+62:    desc: 'A vibrant community where students showcase their projects, participate in challenges and continue their learning journey.',
+63:    features: ['Student Projects', 'Challenges & Events', 'Peer Learning & Mentorship'],
+64:    cta: 'Explore KCC',
+65:  },
+66:]
+67:
+68:const testimonials = [
+69:  {
+70:    quote: 'My son really enjoys the sessions and looks forward to them every week. The instructors are patient and explain concepts very well.',
+71:    name: 'Ankita Maithani', role: 'Parent of Advik', program: 'Coding Program', initial: 'A', color: 'bg-red-500',
+72:  },
+73:  {
+74:    quote: 'AptCoder has made programming fun, exciting and simple for my children. They have gained a lot of confidence and now try to build their own projects.',
+75:    name: 'Dev Prakash', role: 'Parent', program: 'Coding Program', initial: 'D', color: 'bg-blue-500',
+76:  },
+77:  {
+78:    quote: 'The curriculum is well structured and the teachers are very supportive. I have seen a noticeable improvement in my child\'s logical thinking and problem-solving skills.',
+79:    name: 'Komal Chamola', role: 'Parent', program: 'Coding Program', initial: 'K', color: 'bg-green-500',
+80:  },
+81:  {
+82:    quote: 'My daughter has become much more confident with technology and loves creating games and websites. The classes are interactive and keep her really engaged.',
+83:    name: 'Amit Bhatt', role: 'Parent', program: 'Web Development Program', initial: 'A', color: 'bg-orange-500',
+84:  },
+85:]
+86:
+87:const faqs = [
+88:  { q: 'What age groups can join APTCODER?', a: 'Our programs are designed for children aged 6 to 18, with age-appropriate curricula from foundational coding to advanced projects, AI and robotics.' },
+89:  { q: 'Does my child need prior coding experience?', a: 'No prior experience is needed. We start from the basics and progress at your child\'s own pace, from block coding to Python and beyond.' },
+90:  { q: 'What will my child actually learn?', a: 'Children learn coding, web development, AI, robotics, and build real projects like games, apps, websites and animations.' },
+91:  { q: 'Are classes live or self-paced?', a: 'We offer both live interactive classes with expert mentors and self-paced learning modules through our Codely platform.' },
+92:  { q: 'What is Vernatics?', a: 'Vernatics is our proprietary robotics kit where children apply coding to control a physical robot — building, programming, and experimenting with real hardware.' },
+93:  { q: 'What is CNAT?', a: 'CNAT (Coding National Aptitude Test) is India\'s first coding olympiad for K-12 students, helping identify and nurture young coding talent.' },
+94:  { q: 'How do you track my child\'s progress?', a: 'Through our Codely platform, parents get detailed progress reports, session attendance, project milestones and mentor feedback.' },
+95:  { q: 'Can schools work with APTCODER?', a: 'Yes! We offer comprehensive school programs including curriculum integration, teacher training, hands-on learning and assessments.' },
+96:]
+97:
+98:const mediaItems = [
+99:  { outlet: 'THE TIMES OF INDIA', headline: 'Noida-based AptCoder is making coding fun for school students', date: 'May 12, 2024', img: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400&h=220&fit=crop&auto=format' },
+100:  { outlet: 'YOURSTORY', headline: 'How AptCoder is building future-ready kids through coding and AI', date: 'Feb 18, 2024', img: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=220&fit=crop&auto=format' },
+101:  { outlet: 'THE HINDU', headline: 'From classrooms to real-world innovation: AptCoder\'s journey', date: 'Jan 10, 2024', img: 'https://images.unsplash.com/photo-1577017040065-650ee4d43339?w=400&h=220&fit=crop&auto=format' },
+102:  { outlet: 'BW BUSINESSWORLD', headline: 'AptCoder students win at national coding competition', date: 'Nov 28, 2023', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=220&fit=crop&auto=format' },
+103:]
+104:
+105:export default function HomePage({ navigate }: Props) {
+106:  const [openFaq, setOpenFaq] = useState<number | null>(null)
+107:  const [testimonialIdx, setTestimonialIdx] = useState(0)
+108:
+109:  const visibleTestimonials = testimonials.slice(testimonialIdx, testimonialIdx + 3)
+110:
+111:  return (
+112:    <div>
+113:      {/* Partner ticker */}
+114:      <div className="bg-gray-50 border-b border-gray-100 py-3 overflow-hidden">
+115:        <div className="flex items-center gap-2 mb-1 px-6">
+116:          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider shrink-0">Supported &amp; Associated With</span>
+117:        </div>
+118:        <div className="overflow-hidden">
+119:          <div className="ticker-track flex items-center gap-12 whitespace-nowrap" style={{ width: 'max-content' }}>
+120:            {[...partners, ...partners].map((p, i) => (
+121:              <span key={i} className="text-sm font-semibold text-gray-500 shrink-0">{p}</span>
+122:            ))}
+123:          </div>
+124:        </div>
+125:      </div>
+126:
+127:      {/* Hero */}
+128:      <section className="relative overflow-hidden bg-white">
+129:        {/* Peach blob */}
+130:        <div className="absolute right-0 top-0 w-1/2 h-full bg-[#FFF5F2] rounded-l-[80px] -z-0" />
+131:        <div className="absolute right-10 top-10 w-64 h-64 rounded-full bg-[#FFE8E0] opacity-60 blur-2xl -z-0" />
+132:
+133:        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+134:          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+135:            {/* Left content */}
+136:            <div>
+137:              <div className="section-label mb-6">
+138:                CHILDREN · TECHNOLOGY · BRIGHTER TOMORROWS
+139:              </div>
+140:              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight text-gray-900 mb-2">
+141:                From Curious Minds
+142:              </h1>
+143:              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight text-[#E8401C] mb-6">
+144:                to Confident Creators.
+145:              </h1>
+146:
+147:              <div className="flex items-center gap-2 mb-4">
+148:                <span className="text-2xl">🌍</span>
+149:                <p className="text-base font-semibold text-gray-700">
+150:                  Learn Coding in the Language You Understand Best.
+151:                </p>
+152:              </div>
+153:
+154:              <p className="text-gray-500 text-base leading-relaxed mb-8 max-w-md">
+155:                We help children turn curiosity into capability — by thinking, building, experimenting and creating with technology,{' '}
+156:                <span className="text-[#E8401C] font-medium">in regional languages.</span>
+157:              </p>
+158:
+159:              <div className="flex flex-wrap gap-3 mb-10">
+160:                <button
+161:                  onClick={() => navigate('courses')}
+162:                  className="bg-[#E8401C] text-white font-semibold rounded-full px-7 py-3.5 hover:bg-[#C73516] transition-colors flex items-center gap-2"
+163:                >
+164:                  Book a Free Class <span>→</span>
+165:                </button>
+166:                <button
+167:                  onClick={() => navigate('courses')}
+168:                  className="border-2 border-gray-200 text-gray-700 font-semibold rounded-full px-7 py-3.5 hover:border-gray-400 transition-colors flex items-center gap-2"
+169:                >
+170:                  Explore How We Teach <span>→</span>
+171:                </button>
+172:              </div>
+173:
+174:              {/* Category icons */}
+175:              <div className="flex flex-wrap gap-6">
+176:                {[
+177:                  { icon: '</>', label: 'Coding', color: 'text-blue-600 bg-blue-50' },
+178:                  { icon: '📦', label: 'Projects', color: 'text-orange-600 bg-orange-50' },
+179:                  { icon: '🤖', label: 'Robotics', color: 'text-cyan-600 bg-cyan-50' },
+180:                  { icon: '🧠', label: 'AI', color: 'text-purple-600 bg-purple-50' },
+181:                  { icon: '🌐', label: 'Regional Languages', color: 'text-green-600 bg-green-50' },
+182:                ].map((cat) => (
+183:                  <div key={cat.label} className="flex flex-col items-center gap-1.5">
+184:                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-bold ${cat.color}`}>
+185:                      {cat.icon}
+186:                    </div>
+187:                    <span className="text-xs text-gray-500 font-medium text-center">{cat.label}</span>
+188:                  </div>
+189:                ))}
+190:              </div>
+191:            </div>
+192:
+193:            {/* Right image */}
+194:            <div className="relative">
+195:              <div className="rounded-3xl overflow-hidden aspect-[4/3] bg-[#FFE8E0]">
+196:                <img
+197:                  src="https://images.unsplash.com/photo-1597933471507-1ca5765185d8?w=800&h=600&fit=crop&auto=format"
+198:                  alt="Child enthusiastically learning coding on a laptop"
+199:                  className="w-full h-full object-cover"
+200:                />
+201:              </div>
+202:              {/* Floating badges */}
+203:              <div className="absolute -top-4 -left-4 bg-white rounded-2xl shadow-lg px-4 py-3 flex items-center gap-2">
+204:                <span className="text-2xl">💡</span>
+205:                <div>
+206:                  <p className="text-xs font-bold text-gray-800">Think</p>
+207:                </div>
+208:              </div>
+209:              <div className="absolute top-1/3 -right-4 bg-white rounded-2xl shadow-lg px-4 py-3">
+210:                <p className="text-xs font-bold text-gray-800">🛠️ Build</p>
+211:              </div>
+212:              <div className="absolute -bottom-4 left-1/4 bg-[#E8401C] text-white rounded-2xl shadow-lg px-5 py-3">
+213:                <p className="text-sm font-bold">🚀 Create</p>
+214:              </div>
+215:              <div className="absolute top-4 right-8 bg-white rounded-2xl shadow-lg px-3 py-2 text-center">
+216:                <p className="text-xs font-bold text-gray-700">Learn in</p>
+217:                <p className="text-xs font-bold text-[#E8401C]">Your Language</p>
+218:              </div>
+219:            </div>
+220:          </div>
+221:        </div>
+222:      </section>
+223:
+224:      {/* What can your child build */}
+225:      <section className="py-20 bg-white">
+226:        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+227:          <div className="text-center mb-12">
+228:            <div className="section-label justify-center mb-4">REAL PROJECTS. REAL SKILLS.</div>
+229:            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
+230:              What can your child <span className="text-[#E8401C]">build?</span>
+231:            </h2>
+232:            <p className="text-gray-500 max-w-lg mx-auto">
+233:              Learning happens through making. Every APTCODER student creates real projects — not just exercises.
+234:            </p>
+235:          </div>
+236:
+237:          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+238:            {projectCards.map((card) => (
+239:              <div key={card.title} className={`rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow group`}>
+240:                <div className={`${card.bg} p-5`}>
+241:                  <div className="flex items-start gap-3 mb-3">
+242:                    <span className="text-2xl">{card.icon}</span>
+243:                    <div>
+244:                      <h3 className="font-bold text-gray-900 text-lg">{card.title}</h3>
+245:                      <p className="text-sm text-gray-500 mt-0.5">{card.desc}</p>
+246:                    </div>
+247:                  </div>
+248:                  <div className="flex gap-2 flex-wrap mb-4">
+249:                    {card.tags.map((tag, i) => (
+250:                      <span key={tag} className={`text-[10px] font-bold px-2 py-1 rounded-full ${card.tagColors[i] || 'bg-gray-100 text-gray-600'}`}>
+251:                        {tag}
+252:                      </span>
+253:                    ))}
+254:                  </div>
+255:                </div>
+256:                <div className="h-44 overflow-hidden bg-gray-100">
+257:                  <img
+258:                    src={card.img}
+259:                    alt={card.title}
+260:                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+261:                  />
+262:                </div>
+263:              </div>
+264:            ))}
+265:          </div>
+266:
+267:          <div className="flex justify-center gap-4 mt-10">
+268:            <button className="bg-[#E8401C] text-white font-semibold rounded-full px-7 py-3 hover:bg-[#C73516] transition-colors flex items-center gap-2">
+269:              Explore Student Projects <span>→</span>
+270:            </button>
+271:            <button
+272:              onClick={() => navigate('courses')}
+273:              className="text-gray-600 font-semibold px-7 py-3 flex items-center gap-2 hover:text-gray-900 transition-colors"
+274:            >
+275:              See How We Teach <span>→</span>
+276:            </button>
+277:          </div>
+278:        </div>
+279:      </section>
+280:
+281:      {/* Offerings: Learning Beyond Screens */}
+282:      <section className="py-20 bg-[#FFF5F2]">
+283:        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+284:          <div className="mb-10">
+285:            <div className="section-label mb-3">OUR OFFERINGS</div>
+286:            <h2 className="text-4xl font-black text-gray-900">
+287:              Learning <span className="text-[#E8401C]">Beyond Screens</span>
+288:            </h2>
+289:            <p className="text-gray-500 mt-3 max-w-xl">
+290:              A complete learning ecosystem to help children think, build, experiment and grow with technology.
+291:            </p>
+292:          </div>
+293:
+294:          {/* Featured: Vernatics */}
+295:          <div className="rounded-3xl overflow-hidden bg-white shadow-sm mb-6 grid md:grid-cols-2">
+296:            <div className="p-8 flex flex-col justify-center">
+297:              <span className="text-xs font-bold text-white bg-[#E8401C] rounded-full px-3 py-1 self-start mb-4">FEATURED</span>
+298:              <div className="flex items-center gap-3 mb-3">
+299:                <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-2xl">🤖</div>
+300:                <div>
+301:                  <h3 className="text-2xl font-black text-gray-900">Vernatics</h3>
+302:                  <p className="text-sm text-gray-500">Where Coding Meets the Physical World</p>
+303:                </div>
+304:              </div>
+305:              <p className="text-gray-600 text-sm leading-relaxed mb-5">
+306:                An engaging learning experience where children apply coding concepts to real-world robotics and physical systems using our ESP32-based robot and iCodely platform.
+307:              </p>
+308:              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+309:                {['Build Real Projects', 'Control Wirelessly', 'Camera & Object Detection', 'Experiment & Improve'].map((f) => (
+310:                  <div key={f} className="text-center">
+311:                    <div className="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center mx-auto mb-1.5">
+312:                      <span className="text-sm">⚙️</span>
+313:                    </div>
+314:                    <p className="text-[10px] text-gray-500 font-medium leading-tight">{f}</p>
+315:                  </div>
+316:                ))}
+317:              </div>
+318:              <div className="flex gap-3">
+319:                <button className="bg-[#E8401C] text-white font-semibold rounded-full px-5 py-2.5 text-sm hover:bg-[#C73516] transition-colors flex items-center gap-1.5">
+320:                  Explore Vernatics →
+321:                </button>
+322:                <button className="text-gray-600 font-semibold text-sm flex items-center gap-2 hover:text-gray-900 transition-colors">
+323:                  ▶ Watch Video
+324:                </button>
+325:              </div>
+326:            </div>
+327:            <div className="relative min-h-64 bg-gray-100">
+328:              <img
+329:                src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop&auto=format"
+330:                alt="Child programming a robot with Vernatics"
+331:                className="w-full h-full object-cover"
+332:              />
+333:              <div className="absolute top-4 right-4 bg-white rounded-2xl shadow-lg px-4 py-3 text-center">
+334:                <p className="text-xs font-bold text-[#E8401C]">Code</p>
+335:                <p className="text-xs font-bold text-gray-700">Control</p>
+336:                <p className="text-xs font-bold text-green-600">Create</p>
+337:              </div>
+338:            </div>
+339:          </div>
+340:
+341:          {/* Three smaller cards */}
+342:          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+343:            {offerings.map((o) => (
+344:              <div key={o.title} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+345:                <div className="flex items-start justify-between mb-4">
+346:                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${o.bg}`}>
+347:                    {o.icon}
+348:                  </div>
+349:                </div>
+350:                <h3 className="font-black text-gray-900 text-lg mb-1">{o.title}</h3>
+351:                <p className="text-xs text-gray-400 font-medium mb-3">{o.subtitle}</p>
+352:                <p className="text-sm text-gray-600 leading-relaxed mb-4">{o.desc}</p>
+353:                <div className="flex flex-wrap gap-2 mb-5">
+354:                  {o.features.map((f) => (
+355:                    <span key={f} className="text-[10px] font-semibold px-2 py-1 bg-gray-50 text-gray-600 rounded-full border border-gray-100">{f}</span>
+356:                  ))}
+357:                </div>
+358:                <button style={{ color: o.color }} className="text-sm font-bold flex items-center gap-1 hover:opacity-70 transition-opacity">
+359:                  {o.cta} →
+360:                </button>
+361:              </div>
+362:            ))}
+363:          </div>
+364:
+365:          <div className="text-center mt-10">
+366:            <button className="border-2 border-[#E8401C] text-[#E8401C] font-semibold rounded-full px-8 py-3 hover:bg-[#E8401C] hover:text-white transition-colors">
+367:              View All Offerings →
+368:            </button>
+369:          </div>
+370:        </div>
+371:      </section>
+372:
+373:      {/* Impact stats */}
+374:      <section className="py-20 bg-white">
+375:        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+376:          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+377:            <div>
+378:              <div className="section-label mb-4">OUR IMPACT</div>
+379:              <h2 className="text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-3">
+380:                Real Progress.<br />
+381:                <span className="text-[#E8401C]">Brighter Futures.</span>
+382:              </h2>
+383:              <p className="text-gray-500 mb-10 max-w-md">
+384:                More children, more opportunities and a growing global community of young creators.
+385:              </p>
+386:
+387:              <div className="grid grid-cols-2 gap-6">
+388:                {[
+389:                  { icon: '👥', num: '5K+', label: 'Students', sub: 'Learning and building with us' },
+390:                  { icon: '🎓', num: '250+', label: 'Teachers', sub: 'Dedicated and experienced educators' },
+391:                  { icon: '🌍', num: '15+', label: 'Countries', sub: 'A growing global footprint' },
+392:                  { icon: '📚', num: '100+', label: 'Courses', sub: 'From basics to advanced levels' },
+393:                ].map((stat) => (
+394:                  <div key={stat.label} className="flex gap-3 items-start">
+395:                    <span className="text-2xl mt-1">{stat.icon}</span>
+396:                    <div>
+397:                      <p className="text-3xl font-black text-gray-900">{stat.num}</p>
+398:                      <p className="font-bold text-gray-700 text-sm">{stat.label}</p>
+399:                      <p className="text-xs text-gray-400 mt-0.5">{stat.sub}</p>
+400:                    </div>
+401:                  </div>
+402:                ))}
+403:              </div>
+404:            </div>
+405:
+406:            <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#FFE8E0]">
+407:              <img
+408:                src="https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?w=800&h=600&fit=crop&auto=format"
+409:                alt="Child focused and learning technology"
+410:                className="w-full h-full object-cover"
+411:              />
+412:              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+413:              {/* Floating icons overlay */}
+414:              <div className="absolute top-6 right-6 flex flex-col gap-3">
+415:                {[
+416:                  { icon: '💡', label: 'Learn', color: 'bg-yellow-400' },
+417:                  { icon: '🔧', label: 'Build', color: 'bg-orange-400' },
+418:                  { icon: '📈', label: 'Grow', color: 'bg-green-400' },
+419:                ].map((item) => (
+420:                  <div key={item.label} className={`${item.color} rounded-xl px-3 py-2 flex items-center gap-2 shadow-lg`}>
+421:                    <span>{item.icon}</span>
+422:                    <span className="text-xs font-bold text-white">{item.label}</span>
+423:                  </div>
+424:                ))}
+425:              </div>
+426:            </div>
+427:          </div>
+428:        </div>
+429:      </section>
+430:
+431:      {/* In the News */}
+432:      <section className="py-20 bg-gray-50">
+433:        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+434:          <div className="flex items-end justify-between mb-10">
+435:            <div>
+436:              <div className="section-label mb-3">IN THE NEWS</div>
+437:              <h2 className="text-3xl font-black text-gray-900">Featured in Leading Media</h2>
+438:            </div>
+439:            <button className="text-sm font-semibold text-[#E8401C] flex items-center gap-1 hover:opacity-70 transition-opacity">
+440:              View All Articles →
+441:            </button>
+442:          </div>
+443:
+444:          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+445:            {mediaItems.map((item) => (
+446:              <a key={item.headline} href="#" className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+447:                <div className="h-36 overflow-hidden bg-gray-100">
+448:                  <img
+449:                    src={item.img}
+450:                    alt={item.headline}
+451:                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+452:                  />
+453:                </div>
+454:                <div className="p-4">
+455:                  <p className="text-xs font-black text-gray-400 uppercase tracking-wider mb-2">{item.outlet}</p>
+456:                  <p className="text-sm font-semibold text-gray-800 leading-snug mb-2">{item.headline}</p>
+457:                  <p className="text-xs text-gray-400">{item.date}</p>
+458:                </div>
+459:              </a>
+460:            ))}
+461:          </div>
+462:        </div>
+463:      </section>
+464:
+465:      {/* Testimonials */}
+466:      <section className="py-20 bg-white relative overflow-hidden">
+467:        <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFF5F2] rounded-full blur-3xl opacity-70" />
+468:        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+469:          <div className="flex items-end justify-between mb-10">
+470:            <div>
+471:              <div className="section-label mb-3">SUCCESS STORIES</div>
+472:              <h2 className="text-3xl font-black text-gray-900">
+473:                What Parents &amp; Students <span className="text-[#E8401C]">Say</span>
+474:              </h2>
+475:              <p className="text-gray-500 mt-2">Real experiences from families learning with APTCODER.</p>
+476:            </div>
+477:            <button className="hidden sm:flex border border-gray-200 text-gray-700 font-semibold rounded-full px-5 py-2 text-sm hover:border-gray-400 transition-colors items-center gap-2">
+478:              View All Reviews →
+479:            </button>
+480:          </div>
+481:
+482:          <div className="relative">
+483:            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+484:              {visibleTestimonials.map((t, i) => (
+485:                <div key={i} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+486:                  <div className="text-[#E8401C] text-4xl font-black mb-4 leading-none">"</div>
+487:                  <p className="text-gray-700 text-sm leading-relaxed mb-6">{t.quote}</p>
+488:                  <div className="flex items-center gap-3">
+489:                    <div className={`w-10 h-10 rounded-full ${t.color} flex items-center justify-center text-white font-bold text-sm`}>
+490:                      {t.initial}
+491:                    </div>
+492:                    <div>
+493:                      <p className="font-bold text-gray-900 text-sm">{t.name}</p>
+494:                      <p className="text-xs text-gray-400">{t.role}</p>
+495:                      <p className="text-xs text-gray-400">{t.program}</p>
+496:                    </div>
+497:                  </div>
+498:                </div>
+499:              ))}
+500:            </div>
+501:
+502:            {/* Dots */}
+503:            <div className="flex justify-center gap-2 mt-8">
+504:              {testimonials.map((_, i) => (
+505:                <button
+506:                  key={i}
+507:                  onClick={() => setTestimonialIdx(Math.min(i, testimonials.length - 3))}
+508:                  className={`w-2 h-2 rounded-full transition-colors ${
+509:                    i >= testimonialIdx && i < testimonialIdx + 3 ? 'bg-[#E8401C]' : 'bg-gray-200'
+510:                  }`}
+511:                />
+512:              ))}
+513:            </div>
+514:          </div>
+515:        </div>
+516:      </section>
+517:
+518:      {/* FAQ */}
+519:      <section className="py-20 bg-[#FFF5F2]">
+520:        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+521:          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+522:            {/* Left */}
+523:            <div className="lg:col-span-2 flex flex-col justify-start">
+524:              <div className="section-label mb-3">FAQS</div>
+525:              <h2 className="text-3xl font-black text-gray-900 mb-3">
+526:                Questions? We've Got <span className="text-[#E8401C]">Answers.</span>
+527:              </h2>
+528:              <p className="text-gray-500 text-sm mb-8">
+529:                Quick answers to the most common questions about learning with APTCODER.
+530:              </p>
+531:              <div className="hidden lg:block relative rounded-2xl overflow-hidden aspect-square bg-gray-100 max-w-xs">
+532:                <img
+533:                  src="https://images.unsplash.com/photo-1603354350317-6f7aaa5911c5?w=400&h=400&fit=crop&auto=format"
+534:                  alt="Happy child thinking about coding"
+535:                  className="w-full h-full object-cover"
+536:                />
+537:              </div>
+538:            </div>
+539:
+540:            {/* Right: FAQ accordion */}
+541:            <div className="lg:col-span-3">
+542:              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+543:                {[faqs.slice(0, 4), faqs.slice(4)].map((col, ci) => (
+544:                  <div key={ci}>
+545:                    {col.map((faq, i) => {
+546:                      const idx = ci * 4 + i
+547:                      return (
+548:                        <div key={idx} className="faq-item py-4">
+549:                          <button
+550:                            onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+551:                            className="w-full flex items-start justify-between gap-3 text-left"
+552:                          >
+553:                            <div className="flex items-start gap-3">
+554:                              <span className="text-[#E8401C] mt-0.5 shrink-0">❓</span>
+555:                              <span className="font-semibold text-gray-800 text-sm">{faq.q}</span>
+556:                            </div>
+557:                            <span className={`shrink-0 text-lg font-light text-gray-400 transition-transform ${openFaq === idx ? 'rotate-45' : ''}`}>
+558:                              +
+559:                            </span>
+560:                          </button>
+561:                          {openFaq === idx && (
+562:                            <p className="mt-3 ml-8 text-sm text-gray-500 leading-relaxed">{faq.a}</p>
+563:                          )}
+564:                        </div>
+565:                      )
+566:                    })}
+567:                  </div>
+568:                ))}
+569:              </div>
+570:            </div>
+571:          </div>
+572:        </div>
+573:      </section>
+574:
+575:      {/* CTA Banner */}
+576:      <section className="py-16 bg-white">
+577:        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+578:          <div className="bg-[#FFF5F2] rounded-3xl p-10 md:p-14 grid grid-cols-1 md:grid-cols-2 gap-8 items-center overflow-hidden relative">
+579:            <div className="absolute right-0 bottom-0 w-64 h-64 bg-[#FFE8E0] rounded-full blur-3xl opacity-60" />
+580:            <div className="relative">
+581:              <p className="text-xs font-bold text-[#E8401C] uppercase tracking-widest mb-3">JOIN OUR MISSION</p>
+582:              <h2 className="text-3xl font-black text-gray-900 mb-4">
+583:                Let's Create Brighter<br />Futures Together.
+584:              </h2>
+585:              <p className="text-gray-600 text-sm leading-relaxed">
+586:                Be a part of a movement to make technology education accessible, practical and meaningful for every child.
+587:              </p>
+588:            </div>
+589:            <div className="relative flex flex-col gap-3">
+590:              <button
+591:                onClick={() => navigate('courses')}
+592:                className="bg-[#E8401C] text-white font-bold rounded-full px-8 py-4 hover:bg-[#C73516] transition-colors flex items-center justify-center gap-2"
+593:              >
+594:                Book a Free Class →
+595:              </button>
+596:              <button
+597:                onClick={() => navigate('school')}
+598:                className="border-2 border-[#E8401C] text-[#E8401C] font-bold rounded-full px-8 py-4 hover:bg-[#FFF0EB] transition-colors flex items-center justify-center gap-2"
+599:              >
+600:                Partner With Us →
+601:              </button>
+602:            </div>
+603:          </div>
+604:        </div>
+605:      </section>
+606:    </div>
+607:  )
+608:}
+
+(End of file — 608 lines.)

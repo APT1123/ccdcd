@@ -1,0 +1,10 @@
+{
+  "description": "A responsive EdTech platform offering a clean, child-focused interface that blends technology and human-centered design to enhance learning experiences.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

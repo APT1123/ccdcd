@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-primary: #E8401C;
+  --color-primary-dark: #C73516;
+  --color-dark: #111827;
+  --color-peach: #FFF5F2;
+  --color-peach-mid: #FFE8E0;
+  --color-orange: #F97316;
+  --color-blue-soft: #EFF6FF;
+  --color-green-soft: #ECFDF5;
+  --color-purple-soft: #F5F3FF;
+  --color-yellow-soft: #FFFBEB;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #111827;
+  background: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbars by default */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+/* Ticker animation */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  animation: ticker 30s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes possibilities-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.possibilities-reveal {
+  animation: possibilities-reveal 220ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .possibilities-reveal {
+    animation: none;
+  }
+}
+
+/* Blob decorations */
+.blob-1 {
+  background: radial-gradient(ellipse at center, #FFE8E0 0%, transparent 70%);
+}
+
+/* Section label style */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #E8401C;
+}
+
+.section-label::before,
+.section-label::after {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #E8401C;
+  border-radius: 1px;
+}
+
+/* FAQ accordion */
+.faq-item {
+  border-bottom: 1px solid #F3F4F6;
+}
+
+/* Smooth transitions */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #E8401C;
+  transition: width 0.2s ease;
+}
+
+.nav-link.active::after,
+.nav-link:hover::after {
+  width: 100%;
+}
